@@ -30,6 +30,7 @@ func arr() {
 
 	fmt.Println(intArr)
 
+	// for loop over range of array
 	for i, v := range intArr {
 		fmt.Printf("Index: %v, Value: %v \n", i, v)
 	}
@@ -78,7 +79,7 @@ func mapTest() {
 		fmt.Println("Invalid name: Jason")
 	}
 
-	// for loop over range
+	// for loop over range of map
 	for name, age := range myMap2 {
 		fmt.Printf("Name: %v, Age: %v \n", name, age)
 	}
