@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -18,6 +19,8 @@ func main() {
 	slice()
 
 	mapTest()
+
+	stringTest()
 }
 
 func printMe(printValue string) {
@@ -106,4 +109,65 @@ func mapTest() {
 	for i := 0; i < 10; i++ {
 		fmt.Println(i)
 	}
+}
+
+func stringTest() {
+	var myString = "résumé"
+	var indexed = myString[0]
+	fmt.Printf("%v, %T\n", indexed, indexed)
+
+	/*
+		print codes for each character, returns:
+
+		0 114
+		1 233
+		3 115
+		4 117
+		5 109
+		6 233
+
+		the special character é is two bytes long instead of one,
+		this is why the output skips the number 2
+	*/
+	for i, v := range myString {
+		fmt.Println(i, v)
+	}
+
+	var myRuneArr = []rune(myString)
+
+	/*
+		runes are aliases for int32, and can be used to represent
+		individual characters in a string, no matter how many bytes
+		the character is.
+
+		iterating over a rune array returns the expected numbers,
+		this loop will not skip the number 2:
+
+		0 114
+		1 233
+		2 115
+		3 117
+		4 109
+		5 233
+	*/
+	for i, v := range myRuneArr {
+		fmt.Println(i, v)
+	}
+
+	// concat strings with the + symbol
+	var strSlice = []string{"s", "u", "b"}
+	var catStr = "aaa"
+	for i := range strSlice {
+		catStr += strSlice[i]
+	}
+	fmt.Printf("\n%v\n", catStr)
+
+	// string builder
+	var strSlice2 = []string{"s", "u", "b"}
+	var strBuilder strings.Builder
+	for i := range strSlice2 {
+		strBuilder.WriteString(strSlice2[i])
+	}
+	var catStr2 = strBuilder.String()
+	fmt.Printf("\n%v\n", catStr2)
 }
