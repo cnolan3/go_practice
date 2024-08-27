@@ -21,6 +21,8 @@ func main() {
 	mapTest()
 
 	stringTest()
+
+	structTest()
 }
 
 func printMe(printValue string) {
@@ -170,4 +172,58 @@ func stringTest() {
 	}
 	var catStr2 = strBuilder.String()
 	fmt.Printf("\n%v\n", catStr2)
+}
+
+type gasEngine struct {
+	mpg     uint8
+	gallons uint8
+	owner
+}
+
+type electricEngine struct {
+	mpkwh uint8
+	kwh   uint8
+	owner
+}
+
+type owner struct {
+	name string
+}
+
+func (e gasEngine) milesLeft() uint8 {
+	return e.gallons * e.mpg
+}
+
+func (e electricEngine) milesLeft() uint8 {
+	return e.kwh * e.mpkwh
+}
+
+type engine interface {
+	milesLeft() uint8
+}
+
+func canMakeIt(e engine, miles uint8) {
+	if miles <= e.milesLeft() {
+		fmt.Println("you can make it there!")
+	} else {
+		fmt.Println("need to fuel up first!")
+	}
+}
+
+func structTest() {
+	var myEngine gasEngine = gasEngine{25, 15, owner{"Alex"}}
+	fmt.Println(myEngine.mpg, myEngine.gallons, myEngine.name)
+
+	// inline declaration
+	var myEngine2 = struct {
+		mpg     uint8
+		gallons uint8
+	}{27, 10}
+
+	fmt.Println(myEngine2.mpg, myEngine2.gallons)
+
+	var myEngine3 electricEngine = electricEngine{30, 9, owner{"John"}}
+
+	canMakeIt(myEngine, 50)
+	canMakeIt(myEngine3, 50)
 }
