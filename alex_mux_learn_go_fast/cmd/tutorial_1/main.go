@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -25,6 +28,8 @@ func main() {
 	structTest()
 
 	pointerTest()
+
+	goroutineTest()
 }
 
 func printMe(printValue string) {
@@ -240,4 +245,53 @@ func pointerTest() {
 	*p = 1
 	fmt.Printf("The value p points to is: %v\n", *p)
 	fmt.Printf("The value of i is: %v\n", i)
+}
+
+var m = sync.Mutex{}
+var wg = sync.WaitGroup{}
+var dbData = []string{"id1", "id2", "id3", "id4", "id5"}
+var results = []string{}
+
+func goroutineTest() {
+	t0 := time.Now()
+	for i := 0; i < len(dbData); i++ {
+		dbCall(i)
+	}
+	fmt.Printf("\nTotal execution time: %v\n", time.Since(t0))
+
+	t0 = time.Now()
+	for i := 0; i < len(dbData); i++ {
+		wg.Add(1)
+		go dbCallCon(i)
+	}
+	wg.Wait()
+	fmt.Printf("\nTotal execution time: %v\n", time.Since(t0))
+
+	t0 = time.Now()
+	for i := 0; i < len(dbData); i++ {
+		wg.Add(1)
+		go dbCallMod(i)
+	}
+	wg.Wait()
+	fmt.Printf("\nTotal execution time: %v\n", time.Since(t0))
+	fmt.Printf("The results are %v\n", results)
+}
+
+func dbCall(i int) {
+	var delay float32 = rand.Float32() * 2000
+	time.Sleep(time.Duration(delay) * time.Millisecond)
+	fmt.Println("The result from the database is:", dbData[i])
+}
+
+func dbCallCon(i int) {
+	dbCall(i)
+	wg.Done()
+}
+
+func dbCallMod(i int) {
+	dbCall(i)
+	m.Lock()
+	results = append(results, dbData[i])
+	m.Unlock()
+	wg.Done()
 }
