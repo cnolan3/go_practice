@@ -23,6 +23,8 @@ func main() {
 	stringTest()
 
 	structTest()
+
+	pointerTest()
 }
 
 func printMe(printValue string) {
@@ -226,4 +228,16 @@ func structTest() {
 
 	canMakeIt(myEngine, 50)
 	canMakeIt(myEngine3, 50)
+}
+
+func pointerTest() {
+	var p *int32 = new(int32)
+	var i int32
+	fmt.Printf("The value p points to is: %v\n", *p)
+	fmt.Printf("The value of i is: %v\n", i)
+
+	p = &i
+	*p = 1
+	fmt.Printf("The value p points to is: %v\n", *p)
+	fmt.Printf("The value of i is: %v\n", i)
 }
